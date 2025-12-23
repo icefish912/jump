@@ -26,4 +26,13 @@ public class PlatformMove : MonoBehaviour
         }
         transform.position = Vector2.MoveTowards(transform.position,MovePos.position,MoveSpeed*Time.deltaTime);
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        collision.transform.parent=this.transform;
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        collision.transform.parent=null;
+    }
 }
