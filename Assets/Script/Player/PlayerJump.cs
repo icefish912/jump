@@ -11,6 +11,7 @@ public class PlayerJump : MonoBehaviour
     [SerializeField] private LayerMask GroundLayer;
     private bool isGround;
     private bool isJump;
+    private bool doubleJump;
     // Start is called before the first frame update
     void Start()
     {
@@ -41,7 +42,17 @@ public class PlayerJump : MonoBehaviour
     private void Jump()
     {
          if(Input.GetButtonDown("Jump") && isGround)
+         {
             rb.velocity=new Vector2(rb.velocity.x,jumpSpeed);
+            doubleJump=true;
+         }
+         if(doubleJump && !isGround && Input.GetButtonDown("Jump"))
+        {
+        rb.velocity=new Vector2(rb.velocity.x,jumpSpeed);
+        doubleJump=false;
+        anim.SetTrigger("IsDoubleJump");
+        }
+
     }
 
     private void AnimatorController()
