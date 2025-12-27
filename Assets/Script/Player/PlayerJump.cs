@@ -6,9 +6,12 @@ public class PlayerJump : MonoBehaviour
 {
     private  Rigidbody2D rb;
     private Animator anim;
+    private WallCheck wc;
     [SerializeField] private float jumpSpeed;
     [SerializeField] private float isGroundCheckLine;
     [SerializeField] private LayerMask GroundLayer;
+    [SerializeField] private float wallJumpSpeed;
+
     private bool isGround;
     private bool isJump;
     private bool doubleJump;
@@ -17,6 +20,7 @@ public class PlayerJump : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         anim=GetComponent<Animator>();
+        wc=GameObject.FindGameObjectWithTag("WallCheck").GetComponent<WallCheck>();
     }
 
     // Update is called once per frame
@@ -27,6 +31,20 @@ public class PlayerJump : MonoBehaviour
         AnimatorController();
 
         isGroundCheck();
+
+        WallJump();
+    }
+
+    private void WallJump()
+    {
+        if (wc != null && wc.inWall)
+        {
+            rb.velocity=new Vector2(rb.velocity.x,rb.velocity.y*0.8f);
+            if (Input.GetButtonDown("Jump"))
+            {
+                rb.velocity=new Vector2(-wallJumpSpeed*transform.localScale.x,wallJumpSpeed);
+            }
+        }
     }
 
     private void isGroundCheck()
@@ -75,5 +93,6 @@ public class PlayerJump : MonoBehaviour
         }
         anim.SetBool("isJump",isJump);
         anim.SetBool("isGround",isGround);
+        anim.SetBool("inWall", wc != null && wc.inWall);
     }
 }
